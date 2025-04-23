@@ -1,0 +1,25 @@
+diff --git a/astropy/modeling/separable.py b/astropy/modeling/separable.py
+index d6e9246..c21d87e 100644
+--- a/astropy/modeling/separable.py
++++ b/astropy/modeling/separable.py
+@@ -209,10 +209,15 @@ def _coord_matrix(model, pos, noutp):
+     else:
+         mat = np.zeros((noutp, model.n_inputs))
+ 
+-        for i in range(model.n_inputs):
+-            mat[i, i] = 1
+-        if pos == 'right':
+-            mat = np.roll(mat, (noutp - model.n_outputs))
++
++        if pos == 'left':
++            for i in range(model.n_inputs):
++                mat[i, i] = 1
++        elif pos == 'right':
++            offset = noutp - model.n_outputs
++            for i in range(model.n_inputs):
++                mat[offset + i, i] = 1
++
+     return mat
+ 
+ 
+

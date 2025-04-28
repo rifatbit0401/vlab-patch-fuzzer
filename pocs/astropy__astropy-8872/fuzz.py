@@ -15,7 +15,7 @@ def TestOneInput(data):
         arr = np.array(
             fdp.ConsumeFloatListInRange(3,1,100)if np.issubdtype(chosen_dtype, np.floating)
             else fdp.ConsumeIntListInRange(3, 1, 1000), dtype=chosen_dtype)
-        print(arr)
+        # print(arr)
         # Wrap into Quantity
         q = u.Quantity(arr, unit=u.km)
         if chosen_dtype == np.float16 or chosen_dtype == np.float32:
@@ -26,7 +26,7 @@ def TestOneInput(data):
         # Assertion: the dtype must be preserved (fixed in PR #8872)
         # if q.dtype != chosen_dtype:
             # raise RuntimeError(f"BUG: Quantity changed dtype from {chosen_dtype} to {q.dtype}")
-        print("No Violation")
+        # print("No Violation")
     except AssertionError:
         print("Assertion Violation")
     except Exception as e:

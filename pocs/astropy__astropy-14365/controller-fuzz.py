@@ -79,7 +79,7 @@ def TestOneInput(data):
     except Exception as e:
         result["exception"] = 1
         result["error"] = str(e)
-
+        print("exception")
     with open("results.jsonl", "a") as f:
         f.write(json.dumps(result) + "\n")
 

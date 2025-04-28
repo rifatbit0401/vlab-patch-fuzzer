@@ -1,0 +1,35 @@
+diff --git a/astropy/io/fits/card.py b/astropy/io/fits/card.py
+index 2e9a9bd..9dd35fd 100644
+--- a/astropy/io/fits/card.py
++++ b/astropy/io/fits/card.py
+@@ -553,8 +553,12 @@ class Card(_Verify):
+         card(s).
+         """
+ 
++
++        if isinstance(image, bytes):
++            image = image.decode('ascii')
+         card = cls()
+         card._image = _pad(image)
++
+         card._verified = False
+         return card
+ 
+diff --git a/astropy/io/fits/header.py b/astropy/io/fits/header.py
+index d23f312..10e0d9a 100644
+--- a/astropy/io/fits/header.py
++++ b/astropy/io/fits/header.py
+@@ -348,8 +348,12 @@ class Header:
+             A new `Header` instance.
+         """
+ 
++
++        if isinstance(data, bytes):
++            data = data.decode('ascii')
+         cards = []
+ 
++
+         # If the card separator contains characters that may validly appear in
+         # a card, the only way to unambiguously distinguish between cards is to
+         # require that they be Card.length long.  However, if the separator
+

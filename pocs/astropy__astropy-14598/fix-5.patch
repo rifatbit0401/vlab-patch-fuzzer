@@ -1,0 +1,58 @@
+diff --git a/astropy/io/fits/card.py b/astropy/io/fits/card.py
+index 1b3285ddce..d62044f45a 100644
+--- a/astropy/io/fits/card.py
++++ b/astropy/io/fits/card.py
+@@ -767,8 +767,10 @@ class Card(_Verify):
+ 
+         if m.group("bool") is not None:
+             value = m.group("bool") == "T"
++
+         elif m.group("strg") is not None:
+-            value = re.sub("''", "'", m.group("strg"))
++            value = m.group("strg")
++
+         elif m.group("numr") is not None:
+             #  Check for numbers with leading 0s.
+             numr = self._number_NFSC_RE.match(m.group("numr"))
+@@ -858,8 +860,9 @@ class Card(_Verify):
+                 if not m:
+                     return kw, vc
+ 
+-                value = m.group("strg") or ""
+-                value = value.rstrip().replace("''", "'")
++
++                value = (m.group("strg") or "").rstrip()
++
+                 if value and value[-1] == "&":
+                     value = value[:-1]
+                 values.append(value)
+@@ -1056,9 +1059,11 @@ class Card(_Verify):
+         comment_length = 64
+         output = []
+ 
++
+         # do the value string
+-        value = self._value.replace("'", "''")
++        value = self._value
+         words = _words_group(value, value_length)
++
+         for idx, word in enumerate(words):
+             if idx == 0:
+                 headstr = "{:{len}}= ".format(self.keyword, len=KEYWORD_LENGTH)
+@@ -1329,4 +1334,4 @@ def _pad(input):
+     # minimum length is 80
+     else:
+         strlen = _len % Card.length
+-        return input + " " * (Card.length - strlen)
++        return input + " " * (Card.length - strlen)
+diff --git a/astropy/io/fits/header.py b/astropy/io/fits/header.py
+index 335df14e9d..ef63c4114b 100644
+--- a/astropy/io/fits/header.py
++++ b/astropy/io/fits/header.py
+@@ -2326,4 +2326,4 @@ def _hdr_data_size(header):
+         gcount = header.get("GCOUNT", 1)
+         pcount = header.get("PCOUNT", 0)
+         size = abs(bitpix) * gcount * (pcount + size) // 8
+-    return size
++    return size
+

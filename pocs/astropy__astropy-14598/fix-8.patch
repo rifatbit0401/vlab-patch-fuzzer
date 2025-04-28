@@ -1,0 +1,30 @@
+diff --git a/astropy/io/fits/card.py b/astropy/io/fits/card.py
+index c54f5c8..d5b9951 100644
+--- a/astropy/io/fits/card.py
++++ b/astropy/io/fits/card.py
+@@ -767,8 +767,11 @@ class Card(_Verify):
+ 
+         if m.group("bool") is not None:
+             value = m.group("bool") == "T"
++
+         elif m.group("strg") is not None:
+-            value = re.sub("''", "'", m.group("strg"))
++            value = re.sub("('')+", lambda m: "'" * (len(m.group(0)) // 2), m.group("strg"))
++
++
+         elif m.group("numr") is not None:
+             #  Check for numbers with leading 0s.
+             numr = self._number_NFSC_RE.match(m.group("numr"))
+@@ -858,8 +861,10 @@ class Card(_Verify):
+                 if not m:
+                     return kw, vc
+ 
++
+                 value = m.group("strg") or ""
+-                value = value.rstrip().replace("''", "'")
++                value = re.sub("('')+", lambda m: "'" * (len(m.group(0)) // 2), value.rstrip())
++
+                 if value and value[-1] == "&":
+                     value = value[:-1]
+                 values.append(value)
+
